@@ -1,0 +1,6 @@
+let SuspectIPs = dynamic(["102.89.44.17", "102.89.44.23", "102.89.45.101"]);
+// A success is an investigation lead, not automatic proof of compromise.
+CloudoraSignIn_CL
+| where IPAddress in (SuspectIPs) and tostring(ResultType) == "0"
+| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), SuccessfulEvents=count(), Apps=make_set(AppDisplayName) by UserPrincipalName, IPAddress
+| order by FirstSeen asc

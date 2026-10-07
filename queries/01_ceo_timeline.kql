@@ -1,0 +1,8 @@
+let IncidentStart = datetime(2026-08-10);
+let IncidentEnd = datetime(2026-08-11);
+// Half-open interval excludes midnight of the next day.
+CloudoraSignIn_CL
+| where TimeGenerated >= IncidentStart and TimeGenerated < IncidentEnd
+| where UserPrincipalName =~ "daniel.reeve@cloudora.io"
+| project TimeGenerated, AppDisplayName, IPAddress, City, Country, ResultType, ResultDescription
+| order by TimeGenerated asc

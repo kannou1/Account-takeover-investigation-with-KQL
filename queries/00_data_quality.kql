@@ -1,0 +1,11 @@
+// Run each statement separately. Check types before interpreting empty results.
+CloudoraSignIn_CL | getschema
+
+CloudoraAudit_CL | getschema
+
+CloudoraSignIn_CL
+| summarize Rows=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), MissingUsers=countif(isempty(UserPrincipalName))
+
+CloudoraSignIn_CL
+| summarize Events=count() by ResultCode=tostring(ResultType)
+| order by Events desc

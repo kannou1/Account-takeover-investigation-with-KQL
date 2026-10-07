@@ -1,0 +1,6 @@
+let SuspectIPs = dynamic(["102.89.44.17", "102.89.44.23", "102.89.45.101"]);
+// Preserve raw Details; activity labels and nested fields vary by source.
+CloudoraAudit_CL
+| where IPAddress in (SuspectIPs)
+| project TimeGenerated, ActivityDisplayName, TargetUser, IPAddress, Details
+| order by TimeGenerated asc

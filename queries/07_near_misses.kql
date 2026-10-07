@@ -1,0 +1,13 @@
+let SuspectIPs = dynamic(["102.89.44.17", "102.89.44.23", "102.89.45.101"]);
+// Accounts with failures but no observed success from known suspect IPs.
+// This does NOT prove they are uncompromised through other infrastructure.
+let Failed = CloudoraSignIn_CL
+| where IPAddress in (SuspectIPs) and tostring(ResultType) == "50126"
+| extend Account=tolower(UserPrincipalName)
+| summarize Failures=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by Account;
+let Successful = CloudoraSignIn_CL
+| where IPAddress in (SuspectIPs) and tostring(ResultType) == "0"
+| summarize by Account=tolower(UserPrincipalName);
+Failed
+| join kind=leftanti Successful on Account
+| order by Failures desc

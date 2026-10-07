@@ -1,0 +1,12 @@
+// Replace only after query 05 identifies the account; execute statements separately.
+let Victim = "REPLACE_WITH_ACCOUNT_FROM_QUERY_05";
+CloudoraSignIn_CL
+| where UserPrincipalName =~ Victim
+| project TimeGenerated, IPAddress, Country, City, AppDisplayName, ResultType, ResultDescription
+| order by TimeGenerated asc
+
+let Victim = "REPLACE_WITH_ACCOUNT_FROM_QUERY_05";
+CloudoraAudit_CL
+| where TargetUser =~ Victim
+| project TimeGenerated, ActivityDisplayName, IPAddress, Details
+| order by TimeGenerated asc

@@ -1,0 +1,5 @@
+// Broad discovery from the guide; never assume every address in this prefix is malicious.
+CloudoraSignIn_CL
+| where IPAddress startswith "102.89."
+| summarize Attempts=count(), Failures=countif(tostring(ResultType) == "50126"), Successes=countif(tostring(ResultType) == "0"), Accounts=dcount(UserPrincipalName) by IPAddress, Country
+| order by Attempts desc
